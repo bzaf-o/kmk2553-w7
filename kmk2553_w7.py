@@ -15,7 +15,7 @@ st.sidebar.header("Simulation Controls")
 dam_present = st.sidebar.checkbox("Dam on the River 🌊")
 if dam_present:
     water_level = 30  # Reduced dam impact by increasing the fixed water level
-    st.sidebar.write("Water level is slightly higher despite the dam.")
+    st.sidebar.write("Water levels are reduced due to the dam.")
 else:
     water_level = st.sidebar.slider("Amount of Water 💧", 0, 100, 50)
 
