@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np  # Import numpy
 
 # Set page config
-st.set_page_config(page_title="🐰 Natural Selection Model 🐰", layout="wide")
+st.set_page_config(page_title="Natural Selection Model", layout="wide")
 
 # Emojis for the factors
 rabbit_emoji = "🐇"
@@ -13,9 +13,9 @@ def get_text_color(value):
     if value < 30:
         return "red"
     elif value > 80:
-        return "orange"
-    else:
         return "green"
+    else:
+        return "orange"
 
 # Helper function for dynamic status messages
 def get_status_message(factor, value):
@@ -39,15 +39,17 @@ small_grass = max(0, min(100, water + np.random.randint(-15, 5)))
 
 # Helper function for rendering bars
 def render_bar(label, value, color, emoji):
+    # Bar adjusts width based on value
     bar_html = f"""
     <div style="display: flex; align-items: center; margin-bottom: 10px;">
-        <div style="width: 150px; font-weight: bold;">{emoji} {label}:</div>
+        <div style="width: 150px; font-weight: bold;">{emoji} {label}</div>
         <div style="flex: 1; background-color: {color}; height: 20px; width: {value}%; border-radius: 5px;"></div>
         <div style="margin-left: 10px; font-size: 12px;">{value}%</div>
     </div>
     """
     st.markdown(bar_html, unsafe_allow_html=True)
 
+    # Dynamic status text with color
     text_color = get_text_color(value)
     status_message = get_status_message(label, value)
     status_html = f"""
@@ -64,16 +66,16 @@ col_rabbits, col_grass = st.columns(2)
 
 with col_rabbits:
     st.subheader("Rabbit Population")
-    render_bar("Large Rabbits", large_rabbits, "#FB928E", rabbit_emoji)
+    render_bar("Large Rabbits", large_rabbits, "pink", rabbit_emoji)
     st.markdown("---")
-    render_bar("Medium Rabbits", medium_rabbits, "#FFB8BF", rabbit_emoji)
+    render_bar("Medium Rabbits", medium_rabbits, "purple", rabbit_emoji)
     st.markdown("---")
-    render_bar("Small Rabbits", small_rabbits, "#FBC4BF", rabbit_emoji)
+    render_bar("Small Rabbits", small_rabbits, "yellow", rabbit_emoji)
 
 with col_grass:
     st.subheader("Grass Types")
-    render_bar("Large Grass", large_grass, "#0f2310", grass_emoji)
+    render_bar("Large Grass", large_grass, "darkgreen", grass_emoji)
     st.markdown("---")
-    render_bar("Medium Grass", medium_grass, "#265628", grass_emoji)
+    render_bar("Medium Grass", medium_grass, "green", grass_emoji)
     st.markdown("---")
-    render_bar("Small Grass", small_grass, "#449e48", grass_emoji)
+    render_bar("Small Grass", small_grass, "lightgreen", grass_emoji)
