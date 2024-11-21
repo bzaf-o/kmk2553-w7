@@ -1,84 +1,79 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 import streamlit as st
+import numpy as np  # Import numpy
 
-# Title
-st.title("🌟 Interactive Mental Health Modelling Tool")
+# Set page config
+st.set_page_config(page_title="🐰 Natural Selection Model 🐰", layout="wide")
 
-# Introduction
-st.write("""
-This tool allows you to explore how different factors influence mental health. Adjust the sliders below to see 
-how changes in lifestyle and environment affect the overall mental health score.
-""")
+# Emojis for the factors
+rabbit_emoji = "🐇"
+grass_emoji = "🌱"
 
-# Sidebar for Factor Adjustments
-st.sidebar.header("Adjust Factors")
-stress = st.sidebar.slider("😰 Stress Levels (Higher is worse)", 0, 100, 50)
-physical_activity = st.sidebar.slider("🏃‍♂️ Physical Activity (Higher is better)", 0, 100, 50)
-sleep_quality = st.sidebar.slider("😴 Sleep Quality (Higher is better)", 0, 100, 50)
-social_interaction = st.sidebar.slider("🫂 Social Interaction (Higher is better)", 0, 100, 50)
-nutrition = st.sidebar.slider("🥗 Nutrition Quality (Higher is better)", 0, 100, 50)
-coping_mechanisms = st.sidebar.slider("🧘‍♂️ Coping Mechanisms (Higher is better)", 0, 100, 50)
+# Utility function to get text color based on value
+def get_text_color(value):
+    if value < 30:
+        return "red"
+    elif value > 80:
+        return "orange"
+    else:
+        return "green"
 
-# Define Weights for Each Factor
-weights = {
-    "Stress": -8.0,  # More strongly negative
-    "Physical Activity": 6.5,
-    "Sleep Quality": 6.6,
-    "Social Interaction": 6.4,
-    "Nutrition": 6.3,
-    "Coping Mechanisms": 6.8
-}
+# Helper function for dynamic status messages
+def get_status_message(factor, value):
+    if value < 30:
+        return f"Low {factor} level!"
+    elif value > 80:
+        return f"High {factor} level!"
+    return "Balanced levels."
 
-# Normalize Inputs
-inputs = {
-    "Stress": stress,
-    "Physical Activity": physical_activity,
-    "Sleep Quality": sleep_quality,
-    "Social Interaction": social_interaction,
-    "Nutrition": nutrition,
-    "Coping Mechanisms": coping_mechanisms
-}
+# Sidebar slider for water
+st.sidebar.header("Adjust Water Level")
+water = st.sidebar.slider("💧 Water Level", 0, 100, 50)
 
-normalized_inputs = {key: val / 100 for key, val in inputs.items()}
+# Calculate other factors based on water level
+large_rabbits = max(0, min(100, water + np.random.randint(-10, 10)))
+medium_rabbits = max(0, min(100, water + np.random.randint(-5, 15)))
+small_rabbits = max(0, min(100, water + np.random.randint(-15, 5)))
+large_grass = max(0, min(100, water + np.random.randint(-10, 10)))
+medium_grass = max(0, min(100, water + np.random.randint(-5, 15)))
+small_grass = max(0, min(100, water + np.random.randint(-15, 5)))
 
-# Calculate Mental Health Score
-mental_health_score = sum(
-    normalized_inputs[key] * weights[key] for key in normalized_inputs
-)
+# Helper function for rendering bars
+def render_bar(label, value, color, emoji):
+    bar_html = f"""
+    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <div style="width: 150px; font-weight: bold;">{emoji} {label}:</div>
+        <div style="flex: 1; background-color: {color}; height: 20px; width: {value}%; border-radius: 5px;"></div>
+        <div style="margin-left: 10px; font-size: 12px;">{value}%</div>
+    </div>
+    """
+    st.markdown(bar_html, unsafe_allow_html=True)
 
-# Scale to 0-100
-mental_health_score_scaled = np.clip((mental_health_score + 4) * 10, 0, 100)
+    text_color = get_text_color(value)
+    status_message = get_status_message(label, value)
+    status_html = f"""
+    <div style="color: {text_color}; padding: 5px; margin-bottom: 20px; font-size: 12px;">
+        {status_message}
+    </div>
+    """
+    st.markdown(status_html, unsafe_allow_html=True)
 
-# Display Overall Mental Health Score
-st.subheader("Overall Mental Health Score 🧘‍♀️")
-st.write(f"**Score:** {mental_health_score_scaled:.1f} / 100")
+# Layout for factors
+st.header("Natural Selection Factors")
 
-# Horizontal Progress Bar
-st.progress(int(mental_health_score_scaled))
+col_rabbits, col_grass = st.columns(2)
 
-# Dynamic Feedback Based on Score
-st.markdown("### Mental Health State")
-if mental_health_score_scaled >= 80:
-    st.success("😊 You're doing well!")
-elif 50 <= mental_health_score_scaled < 80:
-    st.info("🙂 Keep up the good work!")
-elif 20 <= mental_health_score_scaled < 50:
-    st.warning("😟 Things are a bit rough. Take some time for yourself!")
-else:
-    st.error("💔 Be gentle with yourself! Seek support if needed.")
+with col_rabbits:
+    st.subheader("Rabbit Population")
+    render_bar("Large Rabbits", large_rabbits, "#FB928E", rabbit_emoji)
+    st.markdown("---")
+    render_bar("Medium Rabbits", medium_rabbits, "#FFB8BF", rabbit_emoji)
+    st.markdown("---")
+    render_bar("Small Rabbits", small_rabbits, "#FBC4BF", rabbit_emoji)
 
-# Visualize Factor Contributions
-st.subheader("Factor Contributions")
-contributions = pd.DataFrame({
-    "Factor": list(normalized_inputs.keys()),
-    "Contribution": [normalized_inputs[key] * weights[key] for key in normalized_inputs]
-})
-
-# Horizontal Bar Plot for Contributions
-fig, ax = plt.subplots(figsize=(8, 5))
-contributions.set_index("Factor").plot(kind="barh", legend=False, ax=ax, color='skyblue')
-ax.set_xlabel("Contribution to Mental Health Score")
-ax.set_title("Factor Contributions")
-st.pyplot(fig)
+with col_grass:
+    st.subheader("Grass Types")
+    render_bar("Large Grass", large_grass, "#0f2310", grass_emoji)
+    st.markdown("---")
+    render_bar("Medium Grass", medium_grass, "#265628", grass_emoji)
+    st.markdown("---")
+    render_bar("Small Grass", small_grass, "#449e48", grass_emoji)
