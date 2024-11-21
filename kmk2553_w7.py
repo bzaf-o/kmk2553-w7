@@ -20,12 +20,12 @@ else:
     water_level = st.sidebar.slider("Amount of Water 💧", 0, 100, 50)
 
 # Reactive calculations based on water level
-grass_a = max(0, water_level - 40)  # Small rabbits' grass (moderate water)
-grass_b = max(0, water_level - 25)  # Medium rabbits' grass (moderate water needs)
+grass_a = max(0, water_level - 30)  # Small rabbits' grass (moderate water)
+grass_b = max(0, water_level - 15)  # Medium rabbits' grass (moderate water needs)
 grass_c = max(0, water_level)       # Large rabbits' grass (more drought-resistant)
 
-small_rabbits = max(0, grass_a - 25)  # Small rabbit population reacts to Grass A
-medium_rabbits = max(0, grass_b - 15)  # Medium rabbit population reacts to Grass B
+small_rabbits = max(0, grass_a - 15)  # Small rabbit population reacts to Grass A
+medium_rabbits = max(0, grass_b - 5)  # Medium rabbit population reacts to Grass B
 large_rabbits = max(0, grass_c)       # Large rabbit population reacts to Grass C
 
 # Helper function for severity color
