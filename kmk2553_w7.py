@@ -3,8 +3,7 @@ import streamlit as st
 # Title and Description
 st.title("Natural Selection Dynamics 🌱🐇")
 st.markdown("""
-Explore how the presence of a dam and water availability affect the ecosystem. 
-Adjust sliders and see how populations and resources respond dynamically.
+Explore how the presence of a dam and water availability affect the ecosystem.
 """)
 # Notes
 st.info("Adjust water levels or add a dam to observe how the ecosystem adapts!")
@@ -21,8 +20,8 @@ else:
     water_level = st.sidebar.slider("Amount of Water 💧", 0, 100, 50)
 
 # Reactive calculations based on water level
-grass_a = max(0, water_level - 40)  # Small rabbits' grass (needs more water)
-grass_b = max(0, water_level - 20)  # Medium rabbits' grass (moderate water needs)
+grass_a = max(0, water_level - 20)  # Small rabbits' grass (moderate water)
+grass_b = max(0, water_level - 30)  # Medium rabbits' grass (moderate water needs)
 grass_c = max(0, water_level)       # Large rabbits' grass (more drought-resistant)
 
 small_rabbits = max(0, grass_a - 20)  # Small rabbit population reacts to Grass A
