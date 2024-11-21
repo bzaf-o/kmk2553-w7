@@ -39,11 +39,10 @@ small_grass = max(0, min(100, water + np.random.randint(-15, 5)))
 
 # Helper function for rendering bars
 def render_bar(label, value, color, emoji):
-    # Bar adjusts width based on value
     bar_html = f"""
     <div style="display: flex; align-items: center; margin-bottom: 10px;">
         <div style="width: 150px; font-weight: bold;">{emoji} {label}</div>
-        <div style="flex: 1; background-color: {color}; height: 20px; width: {value}%; border-radius: 5px;"></div>
+        <div style="flex: 1; height: 20px; border-radius: 5px; background: linear-gradient(to right, {color} {value}%, lightgray {value}%);"></div>
         <div style="margin-left: 10px; font-size: 12px;">{value}%</div>
     </div>
     """
