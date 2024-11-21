@@ -15,21 +15,24 @@ initial_water_level = 80
 initial_dam_present = False
 initial_years_passed = 0
 
-# State management for water level, dam, and year counter
+# State management for water level, dam, year counter, and simulation activation
 if "water_level" not in st.session_state:
     st.session_state.water_level = initial_water_level
 if "dam_present" not in st.session_state:
     st.session_state.dam_present = initial_dam_present
 if "years_passed" not in st.session_state:
     st.session_state.years_passed = initial_years_passed
+if "simulation_started" not in st.session_state:
+    st.session_state.simulation_started = False
 
-# Dam toggle and water slider
+# Dam toggle
 st.session_state.dam_present = st.sidebar.checkbox("Dam on the River 🌊", value=st.session_state.dam_present)
-if st.session_state.dam_present:
-    st.session_state.water_level = 30  # Reduced dam impact by increasing the fixed water level
-    st.sidebar.write("Water levels are reduced due to the dam.")
-else:
+
+# Display water level slider only if the dam is not present
+if not st.session_state.dam_present:
     st.session_state.water_level = st.sidebar.slider("Amount of Water 💧", 0, 100, st.session_state.water_level)
+else:
+    st.sidebar.write("The dam is active, reducing water levels.")
 
 # Reactive calculations based on water level
 def calculate_population(water_level):
@@ -44,6 +47,14 @@ def calculate_population(water_level):
         "medium_rabbits": max(0, grass_b - 15),
         "large_rabbits": max(0, grass_c)
     }
+
+# Water level adjustment logic
+def adjust_water_level(years):
+    for _ in range(years):
+        if st.session_state.simulation_started and st.session_state.dam_present:
+            st.session_state.water_level = max(0, st.session_state.water_level - 15)  # Greater decrease with dam
+        else:
+            st.session_state.water_level = max(0, st.session_state.water_level - 10)  # Gradual decrease without dam
 
 # Helper function for severity color
 def get_severity_color(value):
@@ -73,19 +84,22 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("Simulate 1 Year"):
-        st.session_state.water_level = max(0, st.session_state.water_level - 10)
+        adjust_water_level(1)
         st.session_state.years_passed += 1
+        st.session_state.simulation_started = True
 
 with col2:
     if st.button("Simulate 5 Years"):
-        st.session_state.water_level = max(0, st.session_state.water_level - 50)
+        adjust_water_level(5)
         st.session_state.years_passed += 5
+        st.session_state.simulation_started = True
 
 with col3:
     if st.button("Reset to Initial Values"):
         st.session_state.water_level = initial_water_level
         st.session_state.dam_present = initial_dam_present
         st.session_state.years_passed = initial_years_passed
+        st.session_state.simulation_started = False
 
 # Display current year counter
 st.markdown(f"### Years Passed: {st.session_state.years_passed}")
