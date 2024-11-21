@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 
 # Title and Description
 st.title("Natural Selection Dynamics 🌱🐇")
@@ -7,6 +6,8 @@ st.markdown("""
 Explore how the presence of a dam and water availability affect the ecosystem. 
 Adjust sliders and see how populations and resources respond dynamically.
 """)
+# Notes
+st.info("Adjust water levels or add a dam to observe how the ecosystem adapts!")
 
 # Sidebar for Interaction
 st.sidebar.header("Simulation Controls")
@@ -14,8 +15,8 @@ st.sidebar.header("Simulation Controls")
 # Dam toggle and water slider
 dam_present = st.sidebar.checkbox("Dam on the River 🌊")
 if dam_present:
-    water_level = 20  # Fixed water level when dam is present
-    st.sidebar.write("Water level is limited by the dam.")
+    water_level = 30  # Reduced dam impact by increasing the fixed water level
+    st.sidebar.write("Water level is slightly higher despite the dam.")
 else:
     water_level = st.sidebar.slider("Amount of Water 💧", 0, 100, 50)
 
@@ -58,10 +59,10 @@ col1, col2 = st.columns(2)
 with col1:
     st.header("Rabbit Populations 🐇")
     display_factor(
-        "Large Rabbits", large_rabbits, "#FC72A5", "🐇",
-        "Too many large rabbits!" if large_rabbits > 80 else
-        "Balanced population of large rabbits." if large_rabbits > 30 else
-        "Low population of large rabbits!"
+        "Small Rabbits", small_rabbits, "#FEC206", "🐇",
+        "Too many small rabbits!" if small_rabbits > 80 else
+        "Balanced population of small rabbits." if small_rabbits > 30 else
+        "Low population of small rabbits!"
     )
     display_factor(
         "Medium Rabbits", medium_rabbits, "#F99DBC", "🐇",
@@ -70,20 +71,20 @@ with col1:
         "Low population of medium rabbits!"
     )
     display_factor(
-        "Small Rabbits", small_rabbits, "#FEC206", "🐇",
-        "Too many small rabbits!" if small_rabbits > 80 else
-        "Balanced population of small rabbits." if small_rabbits > 30 else
-        "Low population of small rabbits!"
+        "Large Rabbits", large_rabbits, "#FC72A5", "🐇",
+        "Too many large rabbits!" if large_rabbits > 80 else
+        "Balanced population of large rabbits." if large_rabbits > 30 else
+        "Low population of large rabbits!"
     )
 
 # Right Column: Grass Types
 with col2:
     st.header("Grass Availability 🌱")
     display_factor(
-        "Grass C", grass_c, "#3a5a40", "🌱",
-        "Too little Grass C for large rabbits!" if grass_c < 30 else
-        "Adequate Grass C for large rabbits." if grass_c <= 80 else
-        "Plentiful Grass C for large rabbits!"
+        "Grass A", grass_a, "#a3b18a", "🌾",
+        "Too little Grass A for small rabbits!" if grass_a < 30 else
+        "Adequate Grass A for small rabbits." if grass_a <= 80 else
+        "Plentiful Grass A for small rabbits!"
     )
     display_factor(
         "Grass B", grass_b, "#588157", "🌿",
@@ -92,11 +93,8 @@ with col2:
         "Plentiful Grass B for medium rabbits!"
     )
     display_factor(
-        "Grass A", grass_a, "#a3b18a", "🌾",
-        "Too little Grass A for small rabbits!" if grass_a < 30 else
-        "Adequate Grass A for small rabbits." if grass_a <= 80 else
-        "Plentiful Grass A for small rabbits!"
+        "Grass C", grass_c, "#3a5a40", "🌱",
+        "Too little Grass C for large rabbits!" if grass_c < 30 else
+        "Adequate Grass C for large rabbits." if grass_c <= 80 else
+        "Plentiful Grass C for large rabbits!"
     )
-
-# Notes
-st.info("Adjust water levels or add a dam to observe how the ecosystem adapts!")
